@@ -1,6 +1,5 @@
 package com.crafting.our_twitter.repository.model;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,23 +8,18 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@EqualsAndHashCode
 @Entity
 @Getter
 @Setter
-@Table(name = "users")
-public class Users {
+@Table(name = "hashtag")
+public class Hashtag {
 
     @Id
     private String id;
 
-    @Column(name = "user_name")
-    private String userName;
+    @Column(name = "tweet_id")
+    private Integer tweet_id;
 
-    @Column(name = "password")
-    private String password;
-
-    @Column(name = "gender")
-    private String gender;
-
+    @Column(name = "hashtag")
+    private String hashtag;
 }

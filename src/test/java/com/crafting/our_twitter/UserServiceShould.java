@@ -5,7 +5,7 @@ import static org.mockito.Mockito.verify;
 
 import com.crafting.our_twitter.dto.OurUserCreationDTO;
 import com.crafting.our_twitter.repository.UsersRepository;
-import com.crafting.our_twitter.repository.model.Users;
+import com.crafting.our_twitter.repository.model.User;
 import com.crafting.our_twitter.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,12 +38,12 @@ public class UserServiceShould {
 
         userService.createUser(ourUserCreationDTO);
 
-        Users users = new Users();
-        users.setUserName(username);
-        users.setPassword(password);
-        users.setGender(gender);
+        User user = new User();
+        user.setUserName(username);
+        user.setPassword(password);
+        user.setGender(gender);
 
-        verify(usersRepository, times(1)).save(users);
+        verify(usersRepository, times(1)).save(user);
 
     }
 }

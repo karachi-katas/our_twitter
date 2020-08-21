@@ -12,8 +12,8 @@ import java.sql.Timestamp;
 @Entity
 @Getter
 @Setter
-@Table(name = "tweets")
-public class Tweets {
+@Table(name = "tweet")
+public class Tweet {
 
     @Id
     private String id;

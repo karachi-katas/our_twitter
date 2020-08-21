@@ -12,8 +12,8 @@ import javax.persistence.Table;
 @Entity
 @Getter
 @Setter
-@Table(name = "likes")
-public class Likes {
+@Table(name = "like")
+public class Like {
     @Id
     private Integer id;
 
