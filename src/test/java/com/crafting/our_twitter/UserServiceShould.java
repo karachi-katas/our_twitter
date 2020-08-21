@@ -1,17 +1,16 @@
 package com.crafting.our_twitter;
 
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import com.crafting.our_twitter.dto.OurUserCreationDTO;
 import com.crafting.our_twitter.repository.UsersRepository;
 import com.crafting.our_twitter.repository.model.Users;
 import com.crafting.our_twitter.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceShould {
