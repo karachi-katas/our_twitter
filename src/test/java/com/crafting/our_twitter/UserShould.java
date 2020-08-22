@@ -7,7 +7,7 @@ import com.crafting.our_twitter.repository.TweetsRepository;
 import com.crafting.our_twitter.repository.UsersRepository;
 import com.crafting.our_twitter.repository.model.Tweet;
 import com.crafting.our_twitter.repository.model.User;
-import com.crafting.our_twitter.service.UserService;
+import com.crafting.our_twitter.service.UserManagementService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,11 +26,8 @@ public class UserShould {
     @Mock
     UsersRepository usersRepository;
 
-    @Mock
-    TweetsRepository tweetsRepository;
-
     @InjectMocks
-    UserService userService;
+    UserManagementService userManagementService;
 
     private static final Integer USER_ID = 6;
     public static final String USERNAME = "dummyUser";
@@ -50,7 +47,7 @@ public class UserShould {
                 .phonenumber(PHONE_NUMBER)
                 .build();
 
-        userService.createUser(ourUserCreationDTO);
+        userManagementService.createUser(ourUserCreationDTO);
 
         User user = getUser();
         user.setId(null);
@@ -59,7 +56,7 @@ public class UserShould {
 
     }
 
-    private static User getUser() {
+    public static User getUser() {
         User user = new User();
         user.setId(USER_ID);
         user.setUserName(USERNAME);
@@ -76,7 +73,7 @@ public class UserShould {
         when(usersRepository.findByUserName(USERNAME)).thenReturn(Optional.of(user));
 
         // Action
-        Integer userId = userService.signIn(USERNAME, PASSWORD);
+        Integer userId = userManagementService.signIn(USERNAME, PASSWORD);
 
         // Assertion
         Assert.assertEquals((Integer)6, userId);
@@ -89,7 +86,7 @@ public class UserShould {
         when(usersRepository.findByUserName(USERNAME)).thenReturn(Optional.empty());
 
         // Action
-        Integer userId = userService.signIn(USERNAME, PASSWORD);
+        Integer userId = userManagementService.signIn(USERNAME, PASSWORD);
 
         // Assertion
 
@@ -104,28 +101,8 @@ public class UserShould {
 
         // Action
         String incorrectPassword = PASSWORD + "___";
-        userService.signIn(USERNAME, incorrectPassword);
+        userManagementService.signIn(USERNAME, incorrectPassword);
 
         // Assertion
-    }
-
-    @Test
-    public void beAbleToPostATweet() {
-
-        // SETUP
-        String message = "message";
-        User user = getUser();
-        when(usersRepository.findByUserName(USERNAME)).thenReturn(Optional.of(user));
-
-        // ACTION
-        Integer tweetId =  userService.postTweet(USERNAME, message);
-
-        // ASSERTION
-        ArgumentCaptor<Tweet> tweetCaptor = ArgumentCaptor.forClass(Tweet.class);
-        verify(tweetsRepository, times(1)).save(tweetCaptor.capture());
-        verify(usersRepository, times(1)).findByUserName(USERNAME);
-
-        Assert.assertEquals( tweetId,tweetCaptor.getValue().getId());
-        Assert.assertEquals( message,tweetCaptor.getValue().getMessage());
     }
 }
