@@ -2,6 +2,7 @@ package com.crafting.our_twitter;
 
 import com.crafting.our_twitter.exceptions.EmptyMessageException;
 import com.crafting.our_twitter.exceptions.UserNotFoundException;
+import com.crafting.our_twitter.repository.LikesRepository;
 import com.crafting.our_twitter.repository.TweetsRepository;
 import com.crafting.our_twitter.repository.model.Tweet;
 import com.crafting.our_twitter.repository.model.User;
@@ -25,12 +26,15 @@ public class TweetShould {
     @Mock
     UserService userService;
 
+    @Mock
+    LikesRepository likesRepository;
+
     @Test(expected = EmptyMessageException.class)
     public void notBeEmpty() {
         String message = "";
         String userName = "dummy";
 
-        TweetService tweetService = new TweetService(tweetsRepository, userService);
+        TweetService tweetService = new TweetService(tweetsRepository, likesRepository, userService);
         tweetService.postTweet(userName, message);
     }
 
@@ -41,7 +45,7 @@ public class TweetShould {
         String userName = "invalid_dummy";
 
         when(userService.getUser(userName)).thenThrow(new UserNotFoundException());
-        TweetService tweetService = new TweetService(tweetsRepository, userService);
+        TweetService tweetService = new TweetService(tweetsRepository, likesRepository, userService);
 
 //        Action
         tweetService.postTweet(userName, message);
@@ -54,7 +58,7 @@ public class TweetShould {
         String message = "you are dummy";
         String userName = "invalid_dummy";
 
-        TweetService tweetService = new TweetService(tweetsRepository, userService);
+        TweetService tweetService = new TweetService(tweetsRepository, likesRepository, userService);
 
         User user = new User();
         user.setUserName(userName);

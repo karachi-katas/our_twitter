@@ -3,8 +3,10 @@ package com.crafting.our_twitter;
 import com.crafting.our_twitter.dto.OurUserCreationDTO;
 import com.crafting.our_twitter.exceptions.InvalidPasswordException;
 import com.crafting.our_twitter.exceptions.UserNotFoundException;
+import com.crafting.our_twitter.repository.LikesRepository;
 import com.crafting.our_twitter.repository.TweetsRepository;
 import com.crafting.our_twitter.repository.UsersRepository;
+import com.crafting.our_twitter.repository.model.Like;
 import com.crafting.our_twitter.repository.model.Tweet;
 import com.crafting.our_twitter.repository.model.User;
 import com.crafting.our_twitter.service.TweetService;
@@ -27,6 +29,9 @@ public class UserShould {
 
     @Mock
     TweetsRepository tweetsRepository;
+
+    @Mock
+    LikesRepository likesRepository;
 
     @Mock
     UserService userService;
@@ -130,7 +135,7 @@ public class UserShould {
         String message = "you are great";
         String userName = "dummy";
 
-        TweetService tweetService = new TweetService(tweetsRepository, userService);
+        TweetService tweetService = new TweetService(tweetsRepository, likesRepository, userService);
         User user = new User();
         user.setUserName(userName);
 
@@ -143,6 +148,33 @@ public class UserShould {
         tweet.setUserName(userName);
 
         verify(tweetsRepository, times(1)).save(tweet);
+
+    }
+
+    @Test
+    public void beAbleToLikeATweet()
+    {
+        String userName = "dummy";
+        Integer tweetId = 1;
+        Integer userID=1;
+
+        User user = new User();
+        user.setUserName(userName);
+        user.setId(userID);
+
+        when(userService.getUser(userName)).thenReturn(user);
+
+        TweetService tweetService = new TweetService(tweetsRepository, likesRepository, userService);
+        tweetService.reactOnTweet(1,userName,tweetId);
+
+        Like like= new Like();
+        like.setUserId(userID);
+        like.setTweetId(tweetId);
+        like.setReactionEnum(1);
+
+
+        verify(likesRepository, times(1)).save(like);
+
 
     }
 }
