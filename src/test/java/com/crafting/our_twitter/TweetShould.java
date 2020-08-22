@@ -14,8 +14,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 
-import static com.crafting.our_twitter.UserShould.USERNAME;
-import static com.crafting.our_twitter.UserShould.getUser;
+import static com.crafting.our_twitter.fixtures.UserFixture.USERNAME;
+import static com.crafting.our_twitter.fixtures.UserFixture.getUser;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
