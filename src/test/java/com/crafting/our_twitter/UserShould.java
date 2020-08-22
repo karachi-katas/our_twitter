@@ -5,11 +5,13 @@ import com.crafting.our_twitter.exceptions.InvalidPasswordException;
 import com.crafting.our_twitter.exceptions.UserNotFoundException;
 import com.crafting.our_twitter.repository.TweetsRepository;
 import com.crafting.our_twitter.repository.UsersRepository;
+import com.crafting.our_twitter.repository.model.Tweet;
 import com.crafting.our_twitter.repository.model.User;
 import com.crafting.our_twitter.service.UserService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -121,6 +123,7 @@ public class UserShould {
     @Test
     public void beAbleToPostATweet() {
 
+
         UserService userService = new UserService(usersRepository, tweetsRepository);
 
         String username = "username";
@@ -131,11 +134,19 @@ public class UserShould {
         user.setUserName(username);
         user.setPassword(password);
 
+
+
+        ArgumentCaptor<Tweet> tweetCaptor = ArgumentCaptor.forClass(Tweet.class);
+
         when(usersRepository.findByUserName(username)).thenReturn(Optional.of(user));
 
-        userService.postTweet(username, message);
+        Integer tweetId =  userService.postTweet(username, message);
 
-        verify(tweetsRepository, times(1)).save(any());
+        verify(tweetsRepository, times(1)).save(tweetCaptor.capture());
         verify(usersRepository, times(1)).findByUserName(username);
+
+        Assert.assertEquals( tweetId,tweetCaptor.getValue().getId());
+        Assert.assertEquals( message,tweetCaptor.getValue().getMessage());
     }
+
 }

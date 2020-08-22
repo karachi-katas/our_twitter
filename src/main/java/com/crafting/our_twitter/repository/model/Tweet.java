@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 public class Tweet {
 
     @Id
-    private String id;
+    private Integer id;
 
     @Column(name = "message")
     private String message;
