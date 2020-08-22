@@ -1,13 +1,14 @@
 package com.crafting.our_twitter;
 
+import com.crafting.our_twitter.Types.TweetReaction;
 import com.crafting.our_twitter.dto.OurUserCreationDTO;
 import com.crafting.our_twitter.dto.PostTweetDto;
 import com.crafting.our_twitter.exceptions.InvalidPasswordException;
 import com.crafting.our_twitter.exceptions.UserNotFoundException;
-import com.crafting.our_twitter.repository.TweetsRepository;
 import com.crafting.our_twitter.repository.UsersRepository;
 import com.crafting.our_twitter.repository.model.Tweet;
 import com.crafting.our_twitter.repository.model.User;
+import com.crafting.our_twitter.service.LikeService;
 import com.crafting.our_twitter.service.TweetService;
 import com.crafting.our_twitter.service.UserService;
 import org.junit.Assert;
@@ -29,11 +30,13 @@ public class UserShould {
     @Mock
     TweetService tweetService;
 
+    @Mock
+    LikeService likeService;
 
     @Test
     public void beAbleToSignUp() {
 
-        UserService userService = new UserService(usersRepository, null);
+        UserService userService = new UserService(usersRepository, null, null);
         String username = "dummyUser";
         String password = "password";
         String gender = "male";
@@ -63,7 +66,7 @@ public class UserShould {
     public void beAbleToSignIn() {
 
         // Setup
-        UserService userService = new UserService(usersRepository, null);
+        UserService userService = new UserService(usersRepository, null, null);
 
         String userName = "dummyUser";
         String password = "password";
@@ -86,7 +89,7 @@ public class UserShould {
     public void notBeAbleToSignInWithInvalidUser() {
 
         // Setup
-        UserService userService = new UserService(usersRepository, null);
+        UserService userService = new UserService(usersRepository, null, null);
 
         String userName = "dummyUser";
         String password = "password";
@@ -104,7 +107,7 @@ public class UserShould {
     public void notBeAbleToSignInWithInvalidPassword() {
 
         // Setup
-        UserService userService = new UserService(usersRepository, null);
+        UserService userService = new UserService(usersRepository, null, null);
 
         String userName = "dummyUser";
         String password = "password";
@@ -130,7 +133,7 @@ public class UserShould {
 
         // Setup
 
-        UserService userService = new UserService(usersRepository, tweetService);
+        UserService userService = new UserService(usersRepository, tweetService, null);
 
         Integer userId = 5;
         String userName = "john";
@@ -169,7 +172,7 @@ public class UserShould {
 
         // Setup
 
-        UserService userService = new UserService(usersRepository, tweetService);
+        UserService userService = new UserService(usersRepository, tweetService, null);
 
         Integer userId = 5;
         String userName = "john";
@@ -202,7 +205,37 @@ public class UserShould {
     }
 
 
+    @Test
+    public void beAbleToLikeATweet() {
 
+        //arrange
+        UserService userService = new UserService(usersRepository, null, likeService);
+
+        Integer userId = 5;
+        Integer tweetId = 10;
+
+        //act
+        userService.likeTweet(userId, tweetId);
+
+        //assert
+        verify(likeService, times(1)).react(userId, tweetId, TweetReaction.Like);
+    }
+
+    @Test
+    public void beAbleToDisLikeATweet() {
+
+        //arrange
+        UserService userService = new UserService(usersRepository, null, likeService);
+
+        Integer userId = 5;
+        Integer tweetId = 10;
+
+        //act
+        userService.disLikeTweet(userId, tweetId);
+
+        //assert
+        verify(likeService, times(1)).react(userId, tweetId, TweetReaction.Dislike);
+    }
 
 
 

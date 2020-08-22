@@ -1,5 +1,6 @@
 package com.crafting.our_twitter.service;
 
+import com.crafting.our_twitter.Types.TweetReaction;
 import com.crafting.our_twitter.dto.OurUserCreationDTO;
 import com.crafting.our_twitter.dto.PostTweetDto;
 import com.crafting.our_twitter.exceptions.UserNotFoundException;
@@ -16,10 +17,13 @@ public class UserService {
     private final UsersRepository usersRepository;
 
     private final TweetService tweetService;
+    private final LikeService likeService;
 
-    public UserService(UsersRepository usersRepository, TweetService tweetService) {
+    public UserService(UsersRepository usersRepository, TweetService tweetService,
+        LikeService likeService) {
         this.usersRepository = usersRepository;
         this.tweetService = tweetService;
+        this.likeService = likeService;
     }
 
     public void createUser(OurUserCreationDTO ourUserCreationDTO) {
@@ -55,5 +59,13 @@ public class UserService {
         guardAgainstMissingUser(user);
         Tweet tweet = Tweet.createFor(user.get().getUserName(),postTweetDto.getMessage());
         tweetService.post(tweet);
+    }
+
+    public void likeTweet(Integer userId, Integer tweetId) {
+        likeService.react(userId, tweetId, TweetReaction.Like);
+    }
+
+    public void disLikeTweet(Integer userId, Integer tweetId) {
+        likeService.react(userId, tweetId, TweetReaction.Dislike);
     }
 }
