@@ -27,10 +27,17 @@ public class Tweet {
     @Column(name = "timestamp")
     private Timestamp timestamp;
 
+    static SwearWords swearWord = new SwearWords();
     public Tweet(int id, String userName, String message) {
+
         this.id = id;
         this.userName = userName;
-        this.message = message;
+        this.message = swearWord.censor(message);
+
     }
+
+
+
+
 }
 
