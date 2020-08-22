@@ -46,5 +46,22 @@ public class TweetShould {
         tweetService.postTweet(userName, message);
 
     }
+    
+    @Test
+    public void replaceFoulWordWithDuck(){
+//        Setup
+        String message = "you are dummy";
+        String userName = "invalid_dummy";
+
+        TweetService tweetService = new TweetService(tweetsRepository, userService);
+
+        tweetService.postTweet(userName,message);
+
+        Tweet tweet = new Tweet();
+        tweet.setMessage("you are duck");
+        tweet.setUserName(userName);
+
+        verify(tweetsRepository, times(1)).save(tweet);
+    }
 
 }

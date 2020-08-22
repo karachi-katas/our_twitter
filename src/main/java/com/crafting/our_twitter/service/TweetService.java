@@ -24,7 +24,7 @@ public class TweetService
     {
 
         if(message.isEmpty())  throw new EmptyMessageException();
-
+        message=message.replaceAll("dummy", "duck");
         User user = userService.getUser(userName);
 
         Tweet tweet = new Tweet();

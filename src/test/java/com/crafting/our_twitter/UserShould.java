@@ -131,7 +131,11 @@ public class UserShould {
         String userName = "dummy";
 
         TweetService tweetService = new TweetService(tweetsRepository, userService);
+        User user = new User();
+        user.setUserName(userName);
 
+
+        when(userService.getUser(userName)).thenReturn(user);
         tweetService.postTweet(userName,message);
 
         Tweet tweet = new Tweet();
