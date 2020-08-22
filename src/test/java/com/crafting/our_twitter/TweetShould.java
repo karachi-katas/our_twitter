@@ -87,7 +87,7 @@ public class TweetShould {
     }
 
     @Test
-    public void shouldBePostedWithSwearWordsReplacedWithDuck() {
+    public void bePostedWithSwearWordsReplacedWithDuck() {
         // Setup
         Tweet tweet = new Tweet();
         String message = "Shit Okay Not a Effing Swear Words Damn";
