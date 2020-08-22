@@ -1,5 +1,6 @@
 package com.crafting.our_twitter.repository.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +14,7 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @Table(name = "tweet")
+@EqualsAndHashCode
 public class Tweet {
 
     @Id
@@ -26,6 +28,17 @@ public class Tweet {
 
     @Column(name = "timestamp")
     private Timestamp timestamp;
+
+    public static Tweet  createFor(String userName , String message)
+    {
+
+        Tweet tweet = new Tweet();
+        tweet.setMessage(message);
+        tweet.setUserName(userName);
+        return tweet;
+    }
+
+
 
 }
 
