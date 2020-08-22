@@ -27,5 +27,9 @@ public class Tweet {
     @Column(name = "timestamp")
     private Timestamp timestamp;
 
+    public Tweet(int id, String message) {
+        this.id = id;
+        this.message = message;
+    }
 }
 

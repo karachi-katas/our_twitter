@@ -13,10 +13,9 @@ import java.util.Optional;
 
 @AllArgsConstructor
 @Service
-public class UserService {
+public class UserManagementService {
 
     private final UsersRepository usersRepository;
-    private final TweetsRepository tweetsRepository;
 
     public void createUser(OurUserCreationDTO ourUserCreationDTO) {
 
@@ -34,7 +33,7 @@ public class UserService {
         return user.getId();
     }
 
-    private User getUser(String userName) {
+    public User getUser(String userName) {
         Optional<User> userOptional = usersRepository.findByUserName(userName);
         guardAgainstMissingUser(userOptional);
 
@@ -43,16 +42,5 @@ public class UserService {
 
     private void guardAgainstMissingUser(Optional<User> userOptional) {
         if (!userOptional.isPresent()) throw new UserNotFoundException();
-    }
-
-    public Integer postTweet(String userName, String tweet) {
-
-        getUser(userName);
-        Tweet newTweet =  new Tweet();
-        newTweet.setId(5);
-        newTweet.setMessage(tweet);
-        tweetsRepository.save(newTweet);
-
-        return newTweet.getId();
     }
 }
