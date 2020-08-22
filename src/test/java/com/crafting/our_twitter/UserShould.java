@@ -3,8 +3,11 @@ package com.crafting.our_twitter;
 import com.crafting.our_twitter.dto.OurUserCreationDTO;
 import com.crafting.our_twitter.exceptions.InvalidPasswordException;
 import com.crafting.our_twitter.exceptions.UserNotFoundException;
+import com.crafting.our_twitter.repository.TweetsRepository;
 import com.crafting.our_twitter.repository.UsersRepository;
+import com.crafting.our_twitter.repository.model.Tweet;
 import com.crafting.our_twitter.repository.model.User;
+import com.crafting.our_twitter.service.TweetService;
 import com.crafting.our_twitter.service.UserService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,6 +24,9 @@ public class UserShould {
 
     @Mock
     UsersRepository usersRepository;
+
+    @Mock
+    TweetsRepository tweetsRepository;
 
     @Test
     public void beAbleToSignUp() {
@@ -112,6 +118,23 @@ public class UserShould {
         userService.signIn(userName, incorrectPassword);
 
         // Assertion
+
+    }
+    @Test
+    public void beAbleToPostATweet()
+    {
+        String message = "you are dummy";
+        String userName = "dummy";
+
+        TweetService tweetService = new TweetService();
+
+        tweetService.postTweet(userName,message);
+
+        Tweet tweet = new Tweet();
+        tweet.setMessage(message);
+        tweet.setUserName(userName);
+
+        verify(tweetsRepository, times(1)).save(tweet);
 
     }
 }

@@ -43,4 +43,6 @@ public class UserService {
     private void guardAgainstMissingUser(Optional<User> userOptional) {
         if (!userOptional.isPresent()) throw new UserNotFoundException();
     }
+
+
 }
