@@ -5,11 +5,14 @@ import com.crafting.our_twitter.exceptions.InvalidPasswordException;
 import com.crafting.our_twitter.exceptions.UserNotFoundException;
 import com.crafting.our_twitter.repository.TweetsRepository;
 import com.crafting.our_twitter.repository.UsersRepository;
+import com.crafting.our_twitter.repository.model.Tweet;
 import com.crafting.our_twitter.repository.model.User;
 import com.crafting.our_twitter.service.UserService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -26,71 +29,67 @@ public class UserShould {
     @Mock
     TweetsRepository tweetsRepository;
 
+    @InjectMocks
+    UserService userService;
+
+    private static final Integer USER_ID = 6;
+    public static final String USERNAME = "dummyUser";
+    public static final String PASSWORD = "password";
+    public static final String GENDER = "male";
+    public static final String COUNTRY = "Uzbekistan";
+    public static final String PHONE_NUMBER = "0334-1234567";
+
     @Test
     public void beAbleToSignUp() {
 
-        UserService userService = new UserService(usersRepository, tweetsRepository);
-        String username = "dummyUser";
-        String password = "password";
-        String gender = "male";
-        String country = "Uzbekistan";
-        String phoneNumber = "0334-1234567";
-
         OurUserCreationDTO ourUserCreationDTO = OurUserCreationDTO.builder()
-                .userName(username)
-                .password(password)
-                .gender(gender)
-                .country(country)
-                .phonenumber(phoneNumber)
+                .userName(USERNAME)
+                .password(PASSWORD)
+                .gender(GENDER)
+                .country(COUNTRY)
+                .phonenumber(PHONE_NUMBER)
                 .build();
 
         userService.createUser(ourUserCreationDTO);
 
-        User user = new User();
-        user.setUserName(username);
-        user.setPassword(password);
-        user.setGender(gender);
+        User user = getUser();
+        user.setId(null);
 
         verify(usersRepository, times(1)).save(user);
 
     }
 
+    private static User getUser() {
+        User user = new User();
+        user.setId(USER_ID);
+        user.setUserName(USERNAME);
+        user.setPassword(PASSWORD);
+        user.setGender(GENDER);
+        return user;
+    }
+
     @Test
     public void beAbleToSignIn() {
 
-        // Setup
-        UserService userService = new UserService(usersRepository, tweetsRepository);
+        User user = getUser();
 
-        String userName = "dummyUser";
-        String password = "password";
-
-        User user = new User();
-        user.setId(6);
-        user.setPassword(password);
-
-        when(usersRepository.findByUserName(userName)).thenReturn(Optional.of(user));
+        when(usersRepository.findByUserName(USERNAME)).thenReturn(Optional.of(user));
 
         // Action
-        Integer userId = userService.signIn(userName, password);
+        Integer userId = userService.signIn(USERNAME, PASSWORD);
 
         // Assertion
         Assert.assertEquals((Integer)6, userId);
-        verify(usersRepository, times(1)).findByUserName(userName);
+        verify(usersRepository, times(1)).findByUserName(USERNAME);
     }
 
     @Test(expected = UserNotFoundException.class)
     public void notBeAbleToSignInWithInvalidUser() {
 
-        // Setup
-        UserService userService = new UserService(usersRepository, tweetsRepository);
-
-        String userName = "dummyUser";
-        String password = "password";
-
-        when(usersRepository.findByUserName(userName)).thenReturn(Optional.empty());
+        when(usersRepository.findByUserName(USERNAME)).thenReturn(Optional.empty());
 
         // Action
-        Integer userId = userService.signIn(userName, password);
+        Integer userId = userService.signIn(USERNAME, PASSWORD);
 
         // Assertion
 
@@ -99,21 +98,13 @@ public class UserShould {
     @Test(expected = InvalidPasswordException.class)
     public void notBeAbleToSignInWithInvalidPassword() {
 
-        // Setup
-        UserService userService = new UserService(usersRepository, tweetsRepository);
+        User user = getUser();
 
-        String userName = "dummyUser";
-        String password = "password";
-
-        User user = new User();
-        user.setUserName(userName);
-        user.setPassword(password);
-
-        when(usersRepository.findByUserName(userName)).thenReturn(Optional.of(user));
+        when(usersRepository.findByUserName(USERNAME)).thenReturn(Optional.of(user));
 
         // Action
-        String incorrectPassword = password + "___";
-        userService.signIn(userName, incorrectPassword);
+        String incorrectPassword = PASSWORD + "___";
+        userService.signIn(USERNAME, incorrectPassword);
 
         // Assertion
     }
@@ -121,21 +112,20 @@ public class UserShould {
     @Test
     public void beAbleToPostATweet() {
 
-        UserService userService = new UserService(usersRepository, tweetsRepository);
-
-        String username = "username";
+        // SETUP
         String message = "message";
-        String password = "password";
+        User user = getUser();
+        when(usersRepository.findByUserName(USERNAME)).thenReturn(Optional.of(user));
 
-        User user = new User();
-        user.setUserName(username);
-        user.setPassword(password);
+        // ACTION
+        Integer tweetId =  userService.postTweet(USERNAME, message);
 
-        when(usersRepository.findByUserName(username)).thenReturn(Optional.of(user));
+        // ASSERTION
+        ArgumentCaptor<Tweet> tweetCaptor = ArgumentCaptor.forClass(Tweet.class);
+        verify(tweetsRepository, times(1)).save(tweetCaptor.capture());
+        verify(usersRepository, times(1)).findByUserName(USERNAME);
 
-        userService.postTweet(username, message);
-
-        verify(tweetsRepository, times(1)).save(any());
-        verify(usersRepository, times(1)).findByUserName(username);
+        Assert.assertEquals( tweetId,tweetCaptor.getValue().getId());
+        Assert.assertEquals( message,tweetCaptor.getValue().getMessage());
     }
 }

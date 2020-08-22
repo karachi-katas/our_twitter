@@ -48,9 +48,11 @@ public class UserService {
     public Integer postTweet(String userName, String tweet) {
 
         getUser(userName);
+        Tweet newTweet =  new Tweet();
+        newTweet.setId(5);
+        newTweet.setMessage(tweet);
+        tweetsRepository.save(newTweet);
 
-        tweetsRepository.save(new Tweet());
-
-        return 0;
+        return newTweet.getId();
     }
 }
