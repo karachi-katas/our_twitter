@@ -17,6 +17,8 @@ public class TweetService
 
     private final UserService userService;
 
+    private final String[] foulWords = {"dummy", "stupid", "idiot"};
+
     public TweetService(TweetsRepository tweetsRepository, LikesRepository likesRepository, UserService userService) {
         this.tweetsRepository = tweetsRepository;
         this.likesRepository = likesRepository;
@@ -27,7 +29,9 @@ public class TweetService
     {
 
         if(message.isEmpty())  throw new EmptyMessageException();
-        message=message.replaceAll("dummy", "duck");
+
+        message = replaceFoulWords(message);
+
         User user = userService.getUser(userName);
 
         Tweet tweet = new Tweet();
@@ -36,6 +40,14 @@ public class TweetService
 
         tweetsRepository.save(tweet);
 
+    }
+
+    private String replaceFoulWords(String message) {
+
+        for (String foulWord : foulWords) {
+            message = message.replaceAll(foulWord, "duck");
+        }
+        return message;
     }
 
 
