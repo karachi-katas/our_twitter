@@ -16,7 +16,7 @@ public class TweetService {
 
         userManagementService.getUser(userName);
 
-        Tweet newTweet =  new Tweet(5, message);
+        Tweet newTweet =  new Tweet(5, userName, message);
         tweetsRepository.save(newTweet);
 
         return newTweet.getId();
