@@ -127,7 +127,7 @@ public class UserShould {
     @Test
     public void beAbleToPostATweet()
     {
-        String message = "you are dummy";
+        String message = "you are great";
         String userName = "dummy";
 
         TweetService tweetService = new TweetService(tweetsRepository, userService);

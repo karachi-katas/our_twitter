@@ -4,6 +4,7 @@ import com.crafting.our_twitter.exceptions.EmptyMessageException;
 import com.crafting.our_twitter.exceptions.UserNotFoundException;
 import com.crafting.our_twitter.repository.TweetsRepository;
 import com.crafting.our_twitter.repository.model.Tweet;
+import com.crafting.our_twitter.repository.model.User;
 import com.crafting.our_twitter.service.TweetService;
 import com.crafting.our_twitter.service.UserService;
 import org.junit.Test;
@@ -55,7 +56,15 @@ public class TweetShould {
 
         TweetService tweetService = new TweetService(tweetsRepository, userService);
 
+        User user = new User();
+        user.setUserName(userName);
+
+        when(userService.getUser(userName)).thenReturn(user);
+
+        //Action
         tweetService.postTweet(userName,message);
+
+        //Assertion
 
         Tweet tweet = new Tweet();
         tweet.setMessage("you are duck");
