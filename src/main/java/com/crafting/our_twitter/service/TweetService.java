@@ -17,6 +17,8 @@ public class TweetService {
         userManagementService.getUser(userName);
 
         message = message.replace("stupid", "duck");
+        message = message.replace("dog", "duck");
+        message = message.replace("mad", "duck");
 
         Tweet newTweet =  new Tweet(5, userName, message);
         tweetsRepository.save(newTweet);

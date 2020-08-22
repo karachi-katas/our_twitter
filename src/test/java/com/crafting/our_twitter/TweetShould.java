@@ -72,4 +72,25 @@ public class TweetShould {
         Assert.assertEquals("hello duck", tweetCaptor.getValue().getMessage());
         Assert.assertEquals(USERNAME, tweetCaptor.getValue().getUserName());
     }
+
+    @Test
+    public void postByUserHavingMultipleSwearWords() {
+
+        // SETUP
+        String message = "hello stupid and mad and dog";
+        User user = getUser();
+        when(userManagementService.getUser(USERNAME)).thenReturn(user);
+
+        // ACTION
+        Integer tweetId = tweetService.postTweet(USERNAME, message);
+
+        // ASSERTION
+        ArgumentCaptor<Tweet> tweetCaptor = ArgumentCaptor.forClass(Tweet.class);
+        verify(tweetsRepository, times(1)).save(tweetCaptor.capture());
+        verify(userManagementService, times(1)).getUser(USERNAME);
+
+        Assert.assertEquals(tweetId, tweetCaptor.getValue().getId());
+        Assert.assertEquals("hello duck and duck and duck", tweetCaptor.getValue().getMessage());
+        Assert.assertEquals(USERNAME, tweetCaptor.getValue().getUserName());
+    }
 }
