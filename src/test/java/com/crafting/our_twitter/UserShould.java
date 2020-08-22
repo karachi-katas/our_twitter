@@ -126,7 +126,7 @@ public class UserShould {
         String message = "you are dummy";
         String userName = "dummy";
 
-        TweetService tweetService = new TweetService();
+        TweetService tweetService = new TweetService(tweetsRepository);
 
         tweetService.postTweet(userName,message);
 

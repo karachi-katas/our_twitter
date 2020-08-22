@@ -1,5 +1,6 @@
 package com.crafting.our_twitter.repository.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ import java.sql.Timestamp;
 @Entity
 @Getter
 @Setter
+@EqualsAndHashCode
 @Table(name = "tweet")
 public class Tweet {
 
