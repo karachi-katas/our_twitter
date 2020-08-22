@@ -1,5 +1,6 @@
 package com.crafting.our_twitter.repository.model;
 
+import com.crafting.our_twitter.exceptions.InvalidPasswordException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +18,7 @@ import javax.persistence.Table;
 public class User {
 
     @Id
-    private String id;
+    private Integer id;
 
     @Column(name = "user_name")
     private String userName;
@@ -28,4 +29,9 @@ public class User {
     @Column(name = "gender")
     private String gender;
 
+    public void guardAgainstInvalidPassword(String password) {
+        if (!password.equals(this.password)) {
+            throw new InvalidPasswordException();
+        }
+    }
 }
