@@ -59,14 +59,16 @@ public class TweetShould {
     {
         // Setup
         Tweet tweet=new Tweet();
-        Timestamp timestamp= new Timestamp(12345L);
+        Timestamp timestamp = new Timestamp(12345L);
+        ArgumentCaptor<Tweet> captor = ArgumentCaptor.forClass(Tweet.class);
 
         // Action
         tweetService.post(tweet);
-        tweet.setTimestamp(timestamp);
 
         // Assertion
-        verify(tweetsRepository,times(1)).save(tweet);
+        verify(tweetsRepository, times(1)).save(captor.capture());
+        Tweet actual = captor.getValue();
+        assertEquals(actual.getTimestamp(), timestamp);
     }
 
     @Test(expected = UserNotFoundException.class)
