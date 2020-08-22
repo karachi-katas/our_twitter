@@ -26,15 +26,6 @@ public class UserShould {
 
     @Mock
     UsersRepository usersRepository;
-    @Mock
-    TweetsRepository tweetsRepository;
-    private TweetService tweetService;
-
-    @Before
-    public void setup()
-    {
-        tweetService=new TweetService(tweetsRepository);
-    }
 
     @Test
     public void beAbleToSignUp() {
@@ -127,33 +118,5 @@ public class UserShould {
 
         // Assertion
 
-    }
-
-    @Test
-    public void beAbleToTweet()
-    {
-        //Setup
-        Tweet tweet= new Tweet();
-
-        //Action
-        tweetService.post(tweet);
-
-        //Assertion
-        verify(tweetsRepository,times(1)).save(tweet);
-    }
-
-    @Test
-    public void beAbleToTweetWithCorrectTimeStamp()
-    {
-        //Setup
-        Tweet tweet=new Tweet();
-        Timestamp timestamp= new Timestamp(12345L);
-
-        //Action
-        tweetService.post(tweet);
-        tweet.setTimestamp(timestamp);
-
-        //Assertion
-        verify(tweetsRepository,times(1)).save(tweet);
     }
 }
