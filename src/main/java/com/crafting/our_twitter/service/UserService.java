@@ -2,20 +2,21 @@ package com.crafting.our_twitter.service;
 
 import com.crafting.our_twitter.dto.OurUserCreationDTO;
 import com.crafting.our_twitter.exceptions.UserNotFoundException;
+import com.crafting.our_twitter.repository.TweetsRepository;
 import com.crafting.our_twitter.repository.UsersRepository;
+import com.crafting.our_twitter.repository.model.Tweet;
 import com.crafting.our_twitter.repository.model.User;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@AllArgsConstructor
 @Service
 public class UserService {
 
     private final UsersRepository usersRepository;
-
-    public UserService(UsersRepository usersRepository) {
-        this.usersRepository = usersRepository;
-    }
+    private final TweetsRepository tweetsRepository;
 
     public void createUser(OurUserCreationDTO ourUserCreationDTO) {
 
@@ -42,5 +43,14 @@ public class UserService {
 
     private void guardAgainstMissingUser(Optional<User> userOptional) {
         if (!userOptional.isPresent()) throw new UserNotFoundException();
+    }
+
+    public Integer postTweet(String userName, String tweet) {
+
+        getUser(userName);
+
+        tweetsRepository.save(new Tweet());
+
+        return 0;
     }
 }

@@ -3,6 +3,7 @@ package com.crafting.our_twitter;
 import com.crafting.our_twitter.dto.OurUserCreationDTO;
 import com.crafting.our_twitter.exceptions.InvalidPasswordException;
 import com.crafting.our_twitter.exceptions.UserNotFoundException;
+import com.crafting.our_twitter.repository.TweetsRepository;
 import com.crafting.our_twitter.repository.UsersRepository;
 import com.crafting.our_twitter.repository.model.User;
 import com.crafting.our_twitter.service.UserService;
@@ -22,10 +23,13 @@ public class UserShould {
     @Mock
     UsersRepository usersRepository;
 
+    @Mock
+    TweetsRepository tweetsRepository;
+
     @Test
     public void beAbleToSignUp() {
 
-        UserService userService = new UserService(usersRepository);
+        UserService userService = new UserService(usersRepository, tweetsRepository);
         String username = "dummyUser";
         String password = "password";
         String gender = "male";
@@ -55,7 +59,7 @@ public class UserShould {
     public void beAbleToSignIn() {
 
         // Setup
-        UserService userService = new UserService(usersRepository);
+        UserService userService = new UserService(usersRepository, tweetsRepository);
 
         String userName = "dummyUser";
         String password = "password";
@@ -78,7 +82,7 @@ public class UserShould {
     public void notBeAbleToSignInWithInvalidUser() {
 
         // Setup
-        UserService userService = new UserService(usersRepository);
+        UserService userService = new UserService(usersRepository, tweetsRepository);
 
         String userName = "dummyUser";
         String password = "password";
@@ -96,7 +100,7 @@ public class UserShould {
     public void notBeAbleToSignInWithInvalidPassword() {
 
         // Setup
-        UserService userService = new UserService(usersRepository);
+        UserService userService = new UserService(usersRepository, tweetsRepository);
 
         String userName = "dummyUser";
         String password = "password";
@@ -112,6 +116,26 @@ public class UserShould {
         userService.signIn(userName, incorrectPassword);
 
         // Assertion
+    }
 
+    @Test
+    public void beAbleToPostATweet() {
+
+        UserService userService = new UserService(usersRepository, tweetsRepository);
+
+        String username = "username";
+        String message = "message";
+        String password = "password";
+
+        User user = new User();
+        user.setUserName(username);
+        user.setPassword(password);
+
+        when(usersRepository.findByUserName(username)).thenReturn(Optional.of(user));
+
+        userService.postTweet(username, message);
+
+        verify(tweetsRepository, times(1)).save(any());
+        verify(usersRepository, times(1)).findByUserName(username);
     }
 }
