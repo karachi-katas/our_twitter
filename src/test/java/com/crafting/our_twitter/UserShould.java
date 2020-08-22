@@ -28,6 +28,10 @@ public class UserShould {
     @Mock
     TweetsRepository tweetsRepository;
 
+    @Mock
+    UserService userService;
+
+
     @Test
     public void beAbleToSignUp() {
 
@@ -126,7 +130,7 @@ public class UserShould {
         String message = "you are dummy";
         String userName = "dummy";
 
-        TweetService tweetService = new TweetService(tweetsRepository);
+        TweetService tweetService = new TweetService(tweetsRepository, userService);
 
         tweetService.postTweet(userName,message);
 

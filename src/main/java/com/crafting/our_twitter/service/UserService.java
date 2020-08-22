@@ -33,7 +33,7 @@ public class UserService {
         return user.getId();
     }
 
-    private User getUser(String userName) {
+    public User getUser(String userName) {
         Optional<User> userOptional = usersRepository.findByUserName(userName);
         guardAgainstMissingUser(userOptional);
 
