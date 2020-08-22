@@ -48,5 +48,6 @@ public class TweetShould {
 
         Assert.assertEquals( tweetId,tweetCaptor.getValue().getId());
         Assert.assertEquals( message,tweetCaptor.getValue().getMessage());
+        Assert.assertEquals( USERNAME,tweetCaptor.getValue().getUserName());
     }
 }
